@@ -2,12 +2,15 @@ package main
 
 import (
 	"encoding/csv"
-	"fmt"
 	"log"
+	"net/http"
 	"os"
+
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
+
 	file, err := os.Open("event_schedule.csv")
 	if err != nil {
 		log.Fatal("error opening  csv file", err)
@@ -22,7 +25,9 @@ func main() {
 		log.Fatal("error reading csv file", err)
 	}
 
-	for _, value := range data {
-		fmt.Println(value)
-	}
+	router := gin.Default()
+	router.GET("/events", func(c *gin.Context) {
+		c.IndentedJSON(http.StatusOK, data)
+	})
+	router.Run()
 }
