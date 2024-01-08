@@ -2,8 +2,9 @@ package main
 
 import (
 	"encoding/csv"
+	"encoding/json"
+	"io"
 	"log"
-	"net/http"
 	"os"
 
 	"github.com/gin-gonic/gin"
@@ -19,15 +20,46 @@ func main() {
 	defer file.Close()
 
 	csvReader := csv.NewReader(file)
-	data, err := csvReader.ReadAll()
+
+	rows := []map[string]string{}
+	var header []string
+	for {
+		record, err := csvReader.Read()
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			log.Fatal(err)
+		}
+		if header == nil {
+			header = record
+		} else {
+			dict := map[string]string{}
+			for i := range header {
+				dict[header[i]] = record[i]
+			}
+			rows = append(rows, dict)
+		}
+	}
+
+	newFile, err := os.Create("event_data.json")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer newFile.Close()
+
+	jsonString, err := json.Marshal(rows)
 
 	if err != nil {
-		log.Fatal("error reading csv file", err)
+		log.Fatal(err)
 	}
+
+	newFile.Write(jsonString)
 
 	router := gin.Default()
 	router.GET("/events", func(c *gin.Context) {
-		c.IndentedJSON(http.StatusOK, data)
+		c.Header("Content-Type", "application/json")
+		c.File("event_data.json")
 	})
 	router.Run()
 }
