@@ -46,12 +46,12 @@ func main() {
 	r := mux.NewRouter()
 	r.HandleFunc("/", getAllEvents).Methods("GET")
 
-	http.Handle("/", r)
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("./static"))))
+	log.Fatal(http.ListenAndServe(":8080", r))
 }
 
 func getAllEvents(w http.ResponseWriter, r *http.Request) {
-	tmpl := template.Must(template.ParseFiles("index.html"))
+	tmpl := template.Must(template.ParseFiles("./tmpl/index.html"))
 
 	rows, err := db.Query("SELECT * FROM events")
 	if err != nil {
