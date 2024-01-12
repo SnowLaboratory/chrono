@@ -2,7 +2,6 @@ package main
 
 import (
 	"database/sql"
-	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
@@ -45,19 +44,15 @@ func main() {
 	fmt.Println("Connected!")
 
 	r := mux.NewRouter()
-	r.HandleFunc("/events", getAllEvents).Methods("GET")
-	r.HandleFunc("/", homeHandler).Methods("GET")
+	r.HandleFunc("/", getAllEvents).Methods("GET")
 
 	http.Handle("/", r)
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
 
-func homeHandler(w http.ResponseWriter, r *http.Request) {
-	tmpl := template.Must(template.ParseFiles("index.html"))
-	tmpl.Execute(w, nil)
-}
-
 func getAllEvents(w http.ResponseWriter, r *http.Request) {
+	tmpl := template.Must(template.ParseFiles("index.html"))
+
 	rows, err := db.Query("SELECT * FROM events")
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -81,16 +76,5 @@ func getAllEvents(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Convert the events slice to JSON
-	responseJSON, err := json.Marshal(events)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	// Set the Content-Type header to application/json
-	w.Header().Set("Content-Type", "application/json")
-
-	// Write the JSON response
-	w.Write(responseJSON)
+	tmpl.Execute(w, events)
 }

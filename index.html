@@ -6,6 +6,11 @@
     <title>Document</title>
   </head>
   <body>
-    <h1>work?</h1>
+    <h1>events</h1>
+    <ul>
+      {{range .}}
+      <li>{{.Name}} - {{.Start}} to {{.End}} (Platform: {{.Platform}})</li>
+      {{end}}
+    </ul>
   </body>
 </html>
