@@ -16,11 +16,11 @@ import (
 var db *sql.DB
 
 type Event struct {
-	Event    string
+	ID       int
+	Name     string
 	Start    string
 	End      string
 	Platform string
-	ID       int
 }
 
 func main() {
@@ -44,7 +44,6 @@ func main() {
 	}
 	fmt.Println("Connected!")
 
-	// Set up API routes
 	r := mux.NewRouter()
 	r.HandleFunc("/events", getAllEvents).Methods("GET")
 	r.HandleFunc("/", homeHandler).Methods("GET")
@@ -69,7 +68,7 @@ func getAllEvents(w http.ResponseWriter, r *http.Request) {
 	var events []Event
 	for rows.Next() {
 		var event Event
-		err := rows.Scan(&event.Event, &event.Start, &event.End, &event.Platform, &event.ID)
+		err := rows.Scan(&event.ID, &event.Name, &event.Start, &event.End, &event.Platform)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
