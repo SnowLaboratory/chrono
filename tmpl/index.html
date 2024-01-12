@@ -6,14 +6,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="/static/css/tailwind.css" />
   </head>
-  <body>
+  <body class="bg-gray-900">
     <div class="container mx-auto">
-      <h1 class="text-3xl text-red-700">events</h1>
-      <ul>
+      <div class="my-4">
+        <h1 class="text-3xl text-gray-900 dark:text-white">Events</h1>
+      </div>
+      <div class="grid grid-cols-4 gap-4">
         {{range .}}
-        <li>{{.Name}} - {{.Start}} to {{.End}} (Platform: {{.Platform}})</li>
+        <div
+          class="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
+        >
+          <h5
+            class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white"
+          >
+            {{.Name}}
+          </h5>
+          <p class="font-normal text-gray-700 dark:text-gray-200">
+            {{.Start}} to {{.End}}
+          </p>
+          <p class="font-normal text-gray-700 dark:text-gray-200">
+            {{.Platform}}
+          </p>
+        </div>
         {{end}}
-      </ul>
+      </div>
     </div>
   </body>
 </html>

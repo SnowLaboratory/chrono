@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"snowlabs/chrono/helpers"
 	"text/template"
 
 	"github.com/go-sql-driver/mysql"
@@ -68,6 +69,7 @@ func getAllEvents(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
+		event.Name = helpers.RemoveUnderscores(event.Name)
 		events = append(events, event)
 	}
 
