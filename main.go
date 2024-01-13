@@ -6,9 +6,10 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"snowlabs/chrono/components"
 	"snowlabs/chrono/helpers"
+	"snowlabs/chrono/models"
 	"strconv"
-	"text/template"
 	"time"
 
 	"github.com/go-sql-driver/mysql"
@@ -16,14 +17,6 @@ import (
 )
 
 var db *sql.DB
-
-type Event struct {
-	ID       int
-	Name     string
-	Start    string
-	End      string
-	Platform string
-}
 
 func main() {
 	cfg := mysql.Config{
@@ -54,8 +47,6 @@ func main() {
 }
 
 func getAllEvents(w http.ResponseWriter, r *http.Request) {
-	tmpl := template.Must(template.ParseFiles("./tmpl/index.html"))
-
 	rows, err := db.Query("SELECT * FROM events ORDER BY start DESC")
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -63,9 +54,9 @@ func getAllEvents(w http.ResponseWriter, r *http.Request) {
 	}
 	defer rows.Close()
 
-	var events []Event
+	var events []models.Event
 	for rows.Next() {
-		var event Event
+		var event models.Event
 		err := rows.Scan(&event.ID, &event.Name, &event.Start, &event.End, &event.Platform)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -87,5 +78,5 @@ func getAllEvents(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	tmpl.Execute(w, events)
+	components.RenderEvents(events).Render(r.Context(), w)
 }

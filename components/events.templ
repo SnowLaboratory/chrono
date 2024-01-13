@@ -1,0 +1,12 @@
+package components 
+
+import "snowlabs/chrono/models"
+
+templ RenderEvents(events []models.Event) {
+	for _, event := range events {
+		<p>{ event.Name }</p>
+		<p>{ event.Start }</p>
+		<p>{ event.End }</p>
+		<p>{ event.Platform }</p>
+	}
+}
