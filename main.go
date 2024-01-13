@@ -7,7 +7,9 @@ import (
 	"net/http"
 	"os"
 	"snowlabs/chrono/helpers"
+	"strconv"
 	"text/template"
+	"time"
 
 	"github.com/go-sql-driver/mysql"
 	"github.com/gorilla/mux"
@@ -54,7 +56,7 @@ func main() {
 func getAllEvents(w http.ResponseWriter, r *http.Request) {
 	tmpl := template.Must(template.ParseFiles("./tmpl/index.html"))
 
-	rows, err := db.Query("SELECT * FROM events")
+	rows, err := db.Query("SELECT * FROM events ORDER BY start DESC")
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -69,6 +71,13 @@ func getAllEvents(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
+
+		i, err := strconv.ParseInt(event.Start, 10, 64)
+		if err != nil {
+			log.Fatal(err)
+		}
+		tm := time.Unix(i, 0)
+		event.Start = tm.Format("2006-01-02 15:04:05 MST")
 		event.Name = helpers.RemoveUnderscores(event.Name)
 		events = append(events, event)
 	}
