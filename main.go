@@ -78,5 +78,5 @@ func getAllEvents(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	components.RenderEvents(events).Render(r.Context(), w)
+	components.Root(events).Render(r.Context(), w)
 }

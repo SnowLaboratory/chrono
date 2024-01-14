@@ -2,11 +2,37 @@ package components
 
 import "snowlabs/chrono/models"
 
-templ RenderEvents(events []models.Event) {
+templ renderEvents(events []models.Event) {
 	for _, event := range events {
-		<p>{ event.Name }</p>
-		<p>{ event.Start }</p>
+		<p class="text-3xl">{ event.Name }</p>
+		<p class="text-blue-600">{ event.Start }</p>
 		<p>{ event.End }</p>
 		<p>{ event.Platform }</p>
+		<p>1</p>
 	}
+}
+
+templ layout(slot templ.Component) {
+	<!DOCTYPE html>
+	<html lang="en">
+		<head>
+			<title>Document</title>
+			<meta charset="UTF-8"/>
+			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+			<link rel="stylesheet" href="/static/css/tailwind.css"/>
+		</head>
+		<body id="contents">
+			<div class="container mx-auto">
+				@slot
+			</div>
+		</body>
+	</html>
+}
+
+templ heading() {
+	<h1>My Heading</h1>
+}
+
+templ Root(events []models.Event) {
+	@layout(renderEvents(events))
 }
