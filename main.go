@@ -9,8 +9,6 @@ import (
 	"snowlabs/chrono/components"
 	"snowlabs/chrono/helpers"
 	"snowlabs/chrono/models"
-	"strconv"
-	"time"
 
 	"github.com/go-sql-driver/mysql"
 	"github.com/gorilla/mux"
@@ -69,12 +67,8 @@ func getAllEvents(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		i, err := strconv.ParseInt(event.Start, 10, 64)
-		if err != nil {
-			log.Fatal(err)
-		}
-		tm := time.Unix(i, 0)
-		event.Start = tm.Format("2006-01-02 15:04:05 MST")
+		event.Start = helpers.UnixTime(event.Start)
+		event.End = helpers.UnixTime(event.End)
 		event.Name = helpers.RemoveUnderscores(event.Name)
 		events = append(events, event)
 	}

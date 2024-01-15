@@ -6,7 +6,7 @@ templ layout(slot templ.Component) {
 	<!DOCTYPE html>
 	<html lang="en">
 		<head>
-			<title>Document</title>
+			<title>chrono</title>
 			<meta charset="UTF-8"/>
 			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 			<link rel="stylesheet" href="/static/css/tailwind.css"/>
@@ -24,12 +24,14 @@ templ heading() {
 }
 
 templ renderEvents(events []models.Event) {
-	for _, event := range events {
-		<p class="text-3xl">{ event.Name }</p>
-		<p class="text-green-600">{ event.Start }</p>
-		<p class="text-yellow-600">{ event.End }</p>
-		<p>{ event.Platform }</p>
-	}
+	<div class="grid grid-cols-4">
+		for _, event := range events {
+			<p class="">{ event.Name }</p>
+			<p class="text-green-600">{ event.Start }</p>
+			<p class="text-red-600">{ event.End }</p>
+			<p>{ event.Platform }</p>
+		}
+	</div>
 }
 
 templ Root(events []models.Event) {
