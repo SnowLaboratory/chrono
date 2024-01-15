@@ -2,15 +2,6 @@ package components
 
 import "snowlabs/chrono/models"
 
-templ renderEvents(events []models.Event) {
-	for _, event := range events {
-		<p class="text-3xl">{ event.Name }</p>
-		<p class="text-blue-600">{ event.Start }</p>
-		<p>{ event.End }</p>
-		<p>{ event.Platform }</p>
-	}
-}
-
 templ layout(slot templ.Component) {
 	<!DOCTYPE html>
 	<html lang="en">
@@ -30,6 +21,15 @@ templ layout(slot templ.Component) {
 
 templ heading() {
 	<h1>My Heading</h1>
+}
+
+templ renderEvents(events []models.Event) {
+	for _, event := range events {
+		<p class="text-3xl">{ event.Name }</p>
+		<p class="text-green-600">{ event.Start }</p>
+		<p class="text-yellow-600">{ event.End }</p>
+		<p>{ event.Platform }</p>
+	}
 }
 
 templ Root(events []models.Event) {
