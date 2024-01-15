@@ -9,6 +9,7 @@ import (
 	"snowlabs/chrono/components"
 	"snowlabs/chrono/helpers"
 	"snowlabs/chrono/models"
+	"time"
 
 	"github.com/go-sql-driver/mysql"
 	"github.com/gorilla/mux"
@@ -51,7 +52,9 @@ func main() {
 }
 
 func getAllEvents(w http.ResponseWriter, r *http.Request) {
-	rows, err := db.Query("SELECT * FROM events ORDER BY start DESC")
+	today := time.Now().Unix()
+
+	rows, err := db.Query("SELECT * FROM events WHERE end > ? ORDER BY start ASC", today)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
