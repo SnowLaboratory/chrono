@@ -18,5 +18,5 @@ func UnixTime(timeString string) string {
 		log.Fatal(err)
 	}
 	tm := time.Unix(i, 0)
-	return tm.Format("2006-01-02 15:04:05 MST")
+	return tm.Format("2006-01-02 MST")
 }
