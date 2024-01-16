@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"os"
 	"snowlabs/chrono/components"
-	"snowlabs/chrono/helpers"
+	"snowlabs/chrono/lib"
 	"snowlabs/chrono/models"
 	"time"
 
@@ -70,9 +70,9 @@ func getAllEvents(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		event.Start = helpers.UnixTime(event.Start)
-		event.End = helpers.UnixTime(event.End)
-		event.Name = helpers.RemoveUnderscores(event.Name)
+		event.Start = lib.UnixTime(event.Start)
+		event.End = lib.UnixTime(event.End)
+		event.Name = lib.RemoveUnderscores(event.Name)
 		events = append(events, event)
 	}
 
